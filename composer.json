@@ -1,0 +1,16 @@
+{
+    "name": "koala-framework/sync-base",
+    "description": "",
+    "homepage": "https://github.com/koala-framework/sync-base",
+    "license": "BSD-2-Clause",
+    "require": {
+    },
+    "autoload": {
+        "psr-4": { "Kwf\\SyncBaseBundle\\": "" }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "symfony/phpunit-bridge": "^5.1"
+    }
+}
