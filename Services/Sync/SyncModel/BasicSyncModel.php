@@ -30,11 +30,11 @@ abstract class BasicSyncModel implements SyncModelInterface
             $item = $this->model->restoreItem($normalizedData);
             if ($item && $this->logger) $this->logger->itemRestored($item, $normalizedData, $this->model);
             if (!$item) {
-                $this->model->createItem($normalizedData);
+                $item = $this->model->createItem($normalizedData);
                 if ($this->logger) $this->logger->itemCreated($item, $normalizedData, $this->model);
             }
         } else {
-            $this->model->updateItem($item, $normalizedData);
+            $item = $this->model->updateItem($item, $normalizedData);
             if ($this->logger) $this->logger->itemUpdated($item, $normalizedData, $this->model);
         }
 
