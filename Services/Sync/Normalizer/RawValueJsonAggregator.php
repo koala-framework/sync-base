@@ -3,7 +3,7 @@ namespace Kwf\SyncBaseBundle\Services\Sync\Normalizer;
 
 use Kwf\SyncBaseBundle\Services\Sync\NormalizerInterface;
 
-class SyncedValueJsonAggregator implements NormalizerInterface
+class RawValueJsonAggregator implements NormalizerInterface
 {
     protected $mapping;
 

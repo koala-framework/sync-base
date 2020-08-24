@@ -3,7 +3,7 @@ namespace Kwf\SyncBaseBundle\Services\Sync\Normalizer;
 
 use Kwf\SyncBaseBundle\Services\Sync\NormalizerInterface;
 
-class MapSyncedValue implements NormalizerInterface
+class MapRawValue implements NormalizerInterface
 {
     protected $valueMap;
     protected $defaultValue;
