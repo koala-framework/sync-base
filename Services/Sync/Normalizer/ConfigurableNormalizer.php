@@ -12,7 +12,7 @@ class ConfigurableNormalizer implements NormalizerInterface
      */
     protected $normalizationConfig;
 
-    public function __construct(array $normalizationConfig)
+    public function __construct(NormalizationConfigInterface $normalizationConfig)
     {
         $this->normalizationConfig = $normalizationConfig;
     }
