@@ -6,6 +6,9 @@ use ReflectionClass;
 
 class ConfigurableNormalizer implements NormalizerInterface
 {
+    /**
+     * @var NormalizationConfigInterface
+     */
     protected $normalizationConfig;
 
     public function __construct(array $normalizationConfig)
