@@ -1,14 +1,18 @@
 <?php
 namespace Kwf\SyncBaseBundle\Services\Sync\Normalizer;
 
+use Kwf\SyncBaseBundle\Services\Sync\NormalizationConfigInterface;
 use Kwf\SyncBaseBundle\Services\Sync\NormalizerInterface;
 use ReflectionClass;
 
 class ConfigurableNormalizer implements NormalizerInterface
 {
+    /**
+     * @var NormalizationConfigInterface
+     */
     protected $normalizationConfig;
 
-    public function __construct(array $normalizationConfig)
+    public function __construct(NormalizationConfigInterface $normalizationConfig)
     {
         $this->normalizationConfig = $normalizationConfig;
     }
@@ -20,7 +24,7 @@ class ConfigurableNormalizer implements NormalizerInterface
 
     protected function applyNormalizationConfig($normalizedCar, $carData)
     {
-        foreach ($this->normalizationConfig as $dbField => $config) {
+        foreach ($this->normalizationConfig->getConfig() as $dbField => $config) {
             if (is_array($config) && isset($config['class'])) {
                 $normalizer = $this->getNormalizer($config);
                 $upstreamValue = null;
