@@ -4,7 +4,7 @@ namespace Kwf\SyncBaseBundle\Services\Sync\SyncModel;
 interface BasicLoggerInterface
 {
     function callUpdateOrCreateForData($rawData);
-    function rawDataNormalized($rawData, $normalizedData);
+    function rawDataNormalized($rawData, $data);
     function itemRestored($item, $normalizedData, $syncModel);
     function itemCreated($item, $normalizedData, $syncModel);
     function itemUpdated($item, $normalizedData, $syncModel);
