@@ -20,6 +20,8 @@ interface LoggerInterface
 
     /**
      * Is being called for every syncModel that was provided for this sync.
+     * If sync model is not provided, it's the initial call for every item that can
+     * be used like a "beforeProcessItem".
      * @param $rawData array
      * @param $index integer
      * @param $syncModel BasicSyncModel
