@@ -8,7 +8,7 @@ use \Countable;
 
 class Sync
 {
-    /** @var RetrieverInterface $retriever */
+    /** @var AbstractRetriever $retriever */
     protected $retriever;
     /** @var SyncModelInterface[] $syncModels */
     protected $syncModels;
@@ -25,12 +25,14 @@ class Sync
     public function sync()
     {
         if ($this->logger) $this->logger->startSync();
+        $this->retriever->prepare();
         $iterator = $this->retriever->getIterator();
         if ($iterator instanceof Countable || is_array($iterator)) {
             if ($this->logger) $this->logger->setItemCount(count($iterator));
         }
         $index = 0;
         foreach ($iterator as $item) {
+
             if ($this->logger) $this->logger->processItem($item, $index);
             foreach ($this->syncModels as $syncModel) {
                 if ($this->logger) $this->logger->processItem($item, $index, $syncModel);
