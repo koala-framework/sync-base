@@ -24,16 +24,15 @@ abstract class AbstractRetriever implements RetrieverInterface
      */
     protected $iterator;
 
-    public function __construct(BaseIterator $iterator = null)
-    {
-        $this->setIterator($iterator);
-    }
+    /**
+     * @var LoggerInterface logger;
+     */
+    public $logger;
 
-    public function setIterator(BaseIterator $iterator)
+    public function __construct(BaseIterator $iterator = null, LoggerInterface $logger = null)
     {
-        if ($iterator == null)
-            $iterator = new BasicIterator($this, $this->logger);
-        $this->iterator = $iterator;
+        $this->logger = $logger;
+        $this->setIterator($iterator);
     }
 
     /**
@@ -50,22 +49,24 @@ abstract class AbstractRetriever implements RetrieverInterface
             if (!mkdir($this->dir, 0777, true) && !is_dir($this->dir)) {
                 throw new Exception(sprintf('Directory "%s" could not be created', $this->dir));
             }
-            $this->downloadData($this->dir);
+            $this->downloadData();
         }
 
-//        if ($this->getIterator() == null)
-//            throw new Exception('getIterator() returned null, make sure to create and assign the iterator before calling parent::__construct or prepare()');
+        $this->readKeys();
+    }
 
-        $this->readData();
+    /**
+     * @param BasicIterator|null $iterator
+     */
+    public function setIterator($iterator)
+    {
+        if ($iterator == null)
+            $iterator = new BasicIterator($this, $this->logger);
+        $this->iterator = $iterator;
     }
 
     public function getIterator()
     {
         return $this->iterator;
-    }
-
-    public function readItem($key)
-    {
-
     }
 }
