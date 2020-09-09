@@ -51,12 +51,17 @@ class RetrieverTest extends TestCase
         $this->assertSameSize($files, $this->testData);
     }
 
+    /**
+     * Tests whether the retriever correctly reads all keys and appends them to the iterator.
+     * @throws \Exception
+     */
     public function testReadKeys()
     {
         $retriever = new TestRetrieverImpl();
         $retriever->prepare();
 
         $iterator = $retriever->getIterator();
+        $this->assertSame($iterator->count(), sizeof($this->testData));
         foreach ($iterator as $key => $item) {
             $index = intval(str_replace('.json', '', $key));
             $this->assertArrayHasKey($index, $this->testData);
