@@ -32,7 +32,6 @@ class Sync
         }
         $index = 0;
         foreach ($iterator as $item) {
-
             if ($this->logger) $this->logger->processItem($item, $index);
             foreach ($this->syncModels as $syncModel) {
                 if ($this->logger) $this->logger->processItem($item, $index, $syncModel);

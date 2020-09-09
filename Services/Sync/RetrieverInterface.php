@@ -9,15 +9,12 @@ interface RetrieverInterface extends IteratorAggregate
      * Meant to download all needed data to be fed into the iterator.
      * It is recommended to use getDataPath() for a consistent and predictable behaviour.
      * Returns whether this was a succesful endeavour.
-     * @param string $targetDirectory the directory we're writing to.
      * @return bool
      */
     function downloadData();
 
     /**
      * Use this function to determine all keys you'd like to read and use $this->iterator->append($key); to feed the iterator with a key.
-     * @param string $sourceDirectory the directory we're reading from.
-     * @param BasicIterator $iterator the iterator we're using.
      * @return void
      */
     function readKeys();

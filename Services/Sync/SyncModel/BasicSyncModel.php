@@ -20,6 +20,11 @@ abstract class BasicSyncModel implements SyncModelInterface
         $this->logger = $logger;
     }
 
+    function validate($data)
+    {
+        return ($data != null);
+    }
+
     function updateOrCreate($rawData, $index, $parentItem = null)
     {
         if ($this->logger) $this->logger->callUpdateOrCreateForData($rawData);
@@ -31,6 +36,11 @@ abstract class BasicSyncModel implements SyncModelInterface
             if ($item && $this->logger) $this->logger->itemRestored($item, $normalizedData, $this->model);
             if (!$item) {
                 $item = $this->model->createItem($normalizedData);
+                if (!$item) {
+                    // this really should never happen. yet, still, if it _does_ happen we're gonna log it carefully.
+                    return;
+                }
+
                 if ($this->logger) $this->logger->itemCreated($item, $normalizedData, $this->model);
             }
         } else {
