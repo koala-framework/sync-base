@@ -17,9 +17,9 @@ class ConfigurableNormalizer implements NormalizerInterface
         $this->normalizationConfig = $normalizationConfig;
     }
 
-    public function normalize($carData)
+    public function normalize($data)
     {
-        return $this->applyNormalizationConfig(array(), $carData);
+        return $this->applyNormalizationConfig(array(), $data);
     }
 
     protected function applyNormalizationConfig($normalizedCar, $carData)
