@@ -37,7 +37,7 @@ abstract class BasicSyncModel implements SyncModelInterface
             if (!$item) {
                 $item = $this->model->createItem($normalizedData);
                 if (!$item) {
-                    // this really should never happen. yet, still, if it _does_ happen we're gonna log it carefully.
+                    if ($this->logger) $this->logger->itemSkipped($normalizedData, $this->model);
                     return;
                 }
 
@@ -45,6 +45,10 @@ abstract class BasicSyncModel implements SyncModelInterface
             }
         } else {
             $item = $this->model->updateItem($item, $normalizedData);
+            if (!$item) {
+                if ($this->logger) $this->logger->itemSkipped($normalizedData, $this->model);
+                return;
+            }
             if ($this->logger) $this->logger->itemUpdated($item, $normalizedData, $this->model);
         }
 
@@ -54,7 +58,8 @@ abstract class BasicSyncModel implements SyncModelInterface
             $additionalSyncModel->updateOrCreate($rawData, $index, $item);
         }
 
-        $this->seenItemIds[] = $this->model->getId($item);
+        if ($item != null)
+            $this->seenItemIds[] = $this->model->getId($item);
     }
 
     function commitTransaction($countItems)
