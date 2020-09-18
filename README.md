@@ -26,6 +26,16 @@ A configurable normalizer can include configurations for other normalizers. Such
 * **class**: the class of the normalizer 
 * **args**: arguments that will be passed to the normalizer's constructor
 
+#### Callable
+Provided as a function within the config, it will be called and passed all car data when normalizing - expected to return the normalized value.
+```
+$config = array(
+    'dealer_id' => function($data) {
+        return explode($data['fullId'], '.')[0];
+    });
+```
+This example would work like a charm on a dataset that has many individual requirements.
+
 #### MapRawValue
 This normalizer maps one or multiple values from the raw data object to a specified normalized value. Here's an example of how a `MapSyncedValue`-Normalizer can be passed to the config of the `ConfigurableNormalizer`:
 ```
