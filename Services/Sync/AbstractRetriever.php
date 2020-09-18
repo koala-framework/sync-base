@@ -49,8 +49,10 @@ abstract class AbstractRetriever implements RetrieverInterface
             if (!mkdir($this->dir, 0777, true) && !is_dir($this->dir)) {
                 throw new Exception(sprintf('Directory "%s" could not be created', $this->dir));
             }
-            $this->downloadData();
         }
+        
+        if (count(scandir($this->dir)) < 3)
+            $this->downloadData();
 
         $this->readKeys();
     }
