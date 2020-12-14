@@ -8,7 +8,7 @@ use \Countable;
 
 class Sync
 {
-    /** @var AbstractRetriever $retriever */
+    /** @var RetrieverInterface $retriever */
     protected $retriever;
     /** @var SyncModelInterface[] $syncModels */
     protected $syncModels;
