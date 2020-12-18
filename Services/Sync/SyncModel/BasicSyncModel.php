@@ -30,12 +30,12 @@ abstract class BasicSyncModel implements SyncModelInterface
         if ($this->logger) $this->logger->callUpdateOrCreateForData($rawData);
         $normalizedData = $this->normalizer->normalize($rawData);
         if ($this->logger) $this->logger->rawDataNormalized($rawData, $normalizedData);
-        $item = $this->model->getItem($normalizedData);
+        $item = $this->model->getItem($normalizedData, $parentItem);
         if (!$item) {
-            $item = $this->model->restoreItem($normalizedData);
+            $item = $this->model->restoreItem($normalizedData, $parentItem);
             if ($item && $this->logger) $this->logger->itemRestored($item, $normalizedData, $this->model);
             if (!$item) {
-                $item = $this->model->createItem($normalizedData);
+                $item = $this->model->createItem($normalizedData, $parentItem);
                 if (!$item) {
                     if ($this->logger) $this->logger->itemSkipped($normalizedData, $this->model);
                     return;
@@ -44,7 +44,7 @@ abstract class BasicSyncModel implements SyncModelInterface
                 if ($this->logger) $this->logger->itemCreated($item, $normalizedData, $this->model);
             }
         } else {
-            $item = $this->model->updateItem($item, $normalizedData);
+            $item = $this->model->updateItem($item, $normalizedData, $parentItem);
             if (!$item) {
                 if ($this->logger) $this->logger->itemSkipped($normalizedData, $this->model);
                 return;
@@ -59,7 +59,7 @@ abstract class BasicSyncModel implements SyncModelInterface
         }
 
         if ($item != null)
-            $this->seenItemIds[] = $this->model->getId($item);
+            $this->seenItemIds[] = $this->model->getId($item, $parentItem);
     }
 
     function commitTransaction($countItems)
