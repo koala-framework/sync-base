@@ -18,7 +18,7 @@ abstract class BasicModelKwfWrapper implements BasicModelInterface
         $this->debug = $debug;
     }
 
-    function isValid($normalizedData)
+    function isValid($normalizedData, $parentItem = null)
     {
         foreach ($this->primaryKeyFieldNames as $fieldName) {
             if (!isset($normalizedData[$fieldName]) || !$normalizedData[$fieldName]) return false;
