@@ -12,6 +12,7 @@ interface BasicLoggerInterface
 
     function callUpdateOrCreateForData($rawData);
     function rawDataNormalized($rawData, $data);
+    function normalizedDataInvalid($rawData, $data);
     function itemRestored($item, $normalizedData, $syncModel);
     function itemCreated($item, $normalizedData, $syncModel);
     function itemUpdated($item, $normalizedData, $syncModel);

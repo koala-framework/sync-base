@@ -12,17 +12,15 @@ abstract class BasicSyncModel implements SyncModelInterface
     protected $additionalSyncModels;
     protected $logger;
     protected $seenItemIds = array();
-    public function __construct(NormalizerInterface $normalizer, BasicModelInterface $model, $additionalSyncModels = array(), BasicLoggerInterface $logger = null)
+    protected $debug;
+
+    public function __construct(NormalizerInterface $normalizer, BasicModelInterface $model, $additionalSyncModels = array(), BasicLoggerInterface $logger = null, $debug = false)
     {
         $this->normalizer = $normalizer;
         $this->model = $model;
         $this->additionalSyncModels = $additionalSyncModels;
         $this->logger = $logger;
-    }
-
-    function validate($data)
-    {
-        return ($data != null);
+        $this->debug = $debug;
     }
 
     function updateOrCreate($rawData, $index, $parentItem = null)
@@ -30,6 +28,11 @@ abstract class BasicSyncModel implements SyncModelInterface
         if ($this->logger) $this->logger->callUpdateOrCreateForData($rawData);
         $normalizedData = $this->normalizer->normalize($rawData);
         if ($this->logger) $this->logger->rawDataNormalized($rawData, $normalizedData);
+        if (!$this->model->isValid($normalizedData, $parentItem)){
+            if ($this->logger) $this->logger->normalizedDataInvalid($rawData, $normalizedData);
+            return;
+        }
+
         $item = $this->model->getItem($normalizedData, $parentItem);
         if (!$item) {
             $item = $this->model->restoreItem($normalizedData, $parentItem);
