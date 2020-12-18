@@ -7,15 +7,6 @@ use Kwf\SyncBaseBundle\Services\Sync\NormalizerInterface;
 
 class DeleteAllTogether extends BasicSyncModel
 {
-    /** @var ModelInterface $model */
-    protected $model;
-    /** @var LoggerInterface $logger */
-    protected $logger;
-    public function __construct(NormalizerInterface $normalizer, ModelInterface $model, $additionalSyncModels = array(), LoggerInterface $logger = null)
-    {
-        parent::__construct($normalizer, $model, $additionalSyncModels, $logger);
-    }
-
     function commitTransaction($countItems)
     {
         parent::commitTransaction($countItems);
