@@ -33,13 +33,17 @@ abstract class BasicModelKwfWrapper implements BasicModelInterface
 
     function updateItem($item, $normalizedData, $parentItem = null)
     {
+        $needsSave = false;
         foreach ($normalizedData as $key => $value) {
+            if ($item->{$key} == $value) continue;
             $item->{$key} = $value;
+            $needsSave = true;
         }
-        if ($this->parentRelationFieldName) {
+        if ($this->parentRelationFieldName && $item->{$this->parentRelationFieldName} != $parentItem->id) {
             $item->{$this->parentRelationFieldName} = $parentItem->id;
+            $needsSave = true;
         }
-        $item->save();
+        if ($needsSave) $item->save();
         return $item;
     }
 
