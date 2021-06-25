@@ -20,7 +20,7 @@ class SkipLevelAdapter implements SyncModelInterface
             $usedPartOfRawData = $usedPartOfRawData[$attributeName];
         }
 
-        $this->syncModel->updateOrCreate($usedPartOfRawData, $index, $parentItem);
+        return $this->syncModel->updateOrCreate($usedPartOfRawData, $index, $parentItem);
     }
 
     function commitTransaction($countItems)

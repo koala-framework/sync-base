@@ -63,6 +63,7 @@ abstract class BasicSyncModel implements SyncModelInterface
 
         if ($item != null)
             $this->seenItemIds[] = $this->model->getId($item, $parentItem);
+        return $item;
     }
 
     function commitTransaction($countItems)
