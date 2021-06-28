@@ -6,7 +6,7 @@ class BasicModelKwfWrapper extends \Kwf\SyncBaseBundle\Services\Sync\SyncModel\B
     function deleteOthers($itemIds)
     {
         $select = new \Kwf_Model_Select();
-        $select->whereNotEquals('id', $itemIds);
+        if (count($itemIds)) $select->whereNotEquals('id', $itemIds);
         $this->model->deleteRows($select);
     }
 }
