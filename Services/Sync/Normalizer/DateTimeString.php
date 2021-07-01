@@ -14,6 +14,8 @@ class DateTimeString implements NormalizerInterface
 
     public function normalize($value)
     {
+        if (!$value) return $value;
+
         $timestamp = strtotime($value);
         return $this->format ? date($this->format, $timestamp) : $timestamp;
     }
