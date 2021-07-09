@@ -66,6 +66,15 @@ class ConfigurableNormalizer implements NormalizerInterface
                 if (!$mapKey) {
                     $value = $drilledCarData;
                 }
+                if (is_array($mapKey)) {
+                    foreach ($mapKey as $fieldName) {
+                        if (!isset($drilledCarData[$fieldName])) {
+                            continue;
+                        }
+                        $value = $drilledCarData[$mapKey];
+                    }
+                    break;
+                }
                 if (!isset($drilledCarData[$mapKey])) {
                     continue;
                 }
