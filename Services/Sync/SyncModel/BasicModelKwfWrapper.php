@@ -72,6 +72,7 @@ abstract class BasicModelKwfWrapper implements BasicModelInterface
         if (!$row) return null;
 
         $row->deleted = false;
+        $row->save();
         return $row;
     }
 
