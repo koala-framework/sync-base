@@ -78,7 +78,7 @@ class ConfigurableNormalizer implements NormalizerInterface
                 if (!isset($drilledCarData[$mapKey])) {
                     continue;
                 }
-                if (!is_array($drilledCarData[$mapKey]) || $index + 1 === count($map)) {
+                if (!is_array($drilledCarData[$mapKey]) || (count($mapping) === 1 && $index + 1 === count($map))) {
                     $value = $drilledCarData[$mapKey];
                     break;
                 }
