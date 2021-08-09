@@ -12,7 +12,7 @@ class RawValueJsonAggregator implements NormalizerInterface
         $this->mapping = $mapping;
     }
 
-    public function normalize($value)
+    public function normalize($value, $index = null)
     {
         $mappedValues = array();
         foreach ($this->mapping as $key => $syncKey) {

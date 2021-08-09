@@ -12,7 +12,7 @@ class StaticValue implements NormalizerInterface
         $this->value = $value;
     }
 
-    public function normalize($value)
+    public function normalize($value, $index = null)
     {
         return $this->value;
     }

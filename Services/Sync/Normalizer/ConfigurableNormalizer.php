@@ -17,12 +17,12 @@ class ConfigurableNormalizer implements NormalizerInterface
         $this->normalizationConfig = $normalizationConfig;
     }
 
-    public function normalize($data)
+    public function normalize($data, $index = null)
     {
-        return $this->applyNormalizationConfig(array(), $data);
+        return $this->applyNormalizationConfig(array(), $data, $index);
     }
 
-    protected function applyNormalizationConfig($normalizedCar, $carData)
+    protected function applyNormalizationConfig($normalizedCar, $carData, $index)
     {
         foreach ($this->normalizationConfig->getConfig() as $dbField => $config) {
             if (is_array($config) && isset($config['class'])) {
@@ -39,7 +39,7 @@ class ConfigurableNormalizer implements NormalizerInterface
                         $upstreamValue = $this->getUpstreamValue($mapping, $carData);
                     }
                 }
-                $normalizedCar[$dbField] = $normalizer->normalize($upstreamValue);
+                $normalizedCar[$dbField] = $normalizer->normalize($upstreamValue, $index);
                 continue;
             }
             $mapping = is_array($config) ? $config : array($config);

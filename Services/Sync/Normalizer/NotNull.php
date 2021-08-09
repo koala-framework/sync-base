@@ -12,7 +12,7 @@ class NotNull implements NormalizerInterface
         $this->fallbackValue = $fallbackValue;
     }
 
-    public function normalize($value)
+    public function normalize($value, $index = null)
     {
         return $value === null ? $this->fallbackValue : $value;
     }

@@ -27,9 +27,9 @@ class ChildEntriesAdapter implements SyncModelInterface
         }
 
         $index = 0;
-        foreach ($usedPartOfRawData as $item) {
-            if ($this->logger) $this->logger->processItem($item, $index, $this->syncModel);
-            $this->syncModel->updateOrCreate($item, $index, $parentItem);
+        foreach ($usedPartOfRawData as $key => $item) {
+            if ($this->logger) $this->logger->processItem($item, $key, $this->syncModel);
+            $this->syncModel->updateOrCreate($item, $key, $parentItem);
             $index++;
         }
         $this->countItems += $index;
