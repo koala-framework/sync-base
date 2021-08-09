@@ -18,7 +18,7 @@ class MapRawValue implements NormalizerInterface
         $this->defaultValue = $defaultValue;
     }
 
-    public function normalize($value)
+    public function normalize($value, $index = null)
     {
         $value = isset($this->valueMap[$value]) ? $this->valueMap[$value] : null;
         if (!$value && $this->defaultValue) {

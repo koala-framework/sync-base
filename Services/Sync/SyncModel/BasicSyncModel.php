@@ -26,7 +26,7 @@ abstract class BasicSyncModel implements SyncModelInterface
     function updateOrCreate($rawData, $index, $parentItem = null)
     {
         if ($this->logger) $this->logger->callUpdateOrCreateForData($rawData);
-        $normalizedData = $this->normalizer->normalize($rawData);
+        $normalizedData = $this->normalizer->normalize($rawData, $index);
         if ($this->logger) $this->logger->rawDataNormalized($rawData, $normalizedData);
         if (!$this->model->isValid($normalizedData, $parentItem)){
             if ($this->logger) $this->logger->normalizedDataInvalid($rawData, $normalizedData);

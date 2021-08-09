@@ -12,7 +12,7 @@ class DateTimeString implements NormalizerInterface
         $this->format = $format;
     }
 
-    public function normalize($value)
+    public function normalize($value, $index = null)
     {
         if (!$value) return $value;
 

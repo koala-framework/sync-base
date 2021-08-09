@@ -12,7 +12,7 @@ class ConcatValue implements NormalizerInterface
         $this->_separator = $separator;
     }
 
-    public function normalize($value)
+    public function normalize($value, $index = null)
     {
         return is_array($value) ? implode($this->_separator, $value) : $value;
     }

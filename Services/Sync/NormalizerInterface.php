@@ -7,5 +7,5 @@ interface NormalizerInterface
      * @param $rawData
      * @return array
      */
-    function normalize($rawData);
+    function normalize($rawData, $index = null);
 }
