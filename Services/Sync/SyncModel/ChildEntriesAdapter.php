@@ -23,7 +23,7 @@ class ChildEntriesAdapter implements SyncModelInterface
     {
         $usedPartOfRawData = $rawData;
         foreach (explode(".", $this->attributeName) as $attributeName) {
-            $usedPartOfRawData = $usedPartOfRawData[$attributeName];
+            $usedPartOfRawData = is_null($attributeName) ? $usedPartOfRawData : $usedPartOfRawData[$attributeName];
         }
 
         $index = 0;
