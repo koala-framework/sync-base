@@ -71,7 +71,7 @@ abstract class BasicModelKwfWrapper implements BasicModelInterface
         $row = $this->model->getRow($select);
         if (!$row) return null;
 
-        $row->deleted = false;
+        $row->deleted = array_key_exists('deleted', $normalizedData) ? $normalizedData['deleted'] : false;
         $row->save();
         return $row;
     }
