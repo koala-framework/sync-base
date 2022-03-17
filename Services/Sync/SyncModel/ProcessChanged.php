@@ -50,7 +50,6 @@ class ProcessChanged extends BasicSyncModel
                 if ($this->logger) $this->logger->itemUpdated($item, $normalizedData, $this->model);
             } else {
                 if ($this->logger) $this->logger->itemSkipped($normalizedData, $this->model);
-                if ($parentItem) $this->addSkippedParentItemId($this->model->getParentId($item));
             }
             $this->seenItemIds[] = $this->model->getId($item, $parentItem);
         }
