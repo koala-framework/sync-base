@@ -12,8 +12,11 @@ class ProcessChanged extends BasicSyncModel
     protected $additionalSyncModels;
     /** @var LoggerInterface $logger */
     protected $logger;
-    protected $skippedParentItemIds = array();
+    /** @var ModelInterface $model */
+    protected $model;
+    protected $lastParentId;
     protected $lastUpdateFieldName;
+    protected $processAdditionalSyncModels;
 
     public function __construct(NormalizerInterface $normalizer, ModelInterface $model, $lastUpdateFieldName = null, $additionalSyncModels = array(), LoggerInterface $logger = null, $debug = false)
     {
@@ -32,10 +35,18 @@ class ProcessChanged extends BasicSyncModel
             return;
         }
 
-        $processAdditionalSyncModels = false;
+        // deleteOthers will not be called for the last parentItem because $this->lastParentId != $parentItem->id will always be false
+        if ($parentItem && $this->lastParentId && $this->lastParentId != $parentItem->id) {
+            $deletedItemsIds = $this->model->deleteOthers($this->seenItemIds, $this->lastParentId);
+            if ($this->logger) $this->logger->deletedItemIds($deletedItemsIds);
+            $this->seenItemIds = array();
+        }
+        if ($parentItem) $this->lastParentId = $parentItem->id;
+
+        $this->processAdditionalSyncModels = false;
         $item = $this->model->getItem($normalizedData, $parentItem);
         if (!$item) {
-            $processAdditionalSyncModels = true;
+            $this->processAdditionalSyncModels = true;
             $item = $this->model->restoreItem($normalizedData, $parentItem);
             if ($item && $this->logger) $this->logger->itemRestored($item, $normalizedData, $this->model);
             if (!$item) {
@@ -45,7 +56,7 @@ class ProcessChanged extends BasicSyncModel
             $this->seenItemIds[] = $this->model->getId($item, $parentItem);
         } else {
             if ($this->lastUpdateFieldName && strtotime($item->{$this->lastUpdateFieldName}) < strtotime($normalizedData[$this->lastUpdateFieldName])) {
-                $processAdditionalSyncModels = true;
+                $this->processAdditionalSyncModels = true;
                 $item = $this->model->updateItem($item, $normalizedData, $parentItem);
                 if ($this->logger) $this->logger->itemUpdated($item, $normalizedData, $this->model);
             } else {
@@ -54,27 +65,27 @@ class ProcessChanged extends BasicSyncModel
             $this->seenItemIds[] = $this->model->getId($item, $parentItem);
         }
 
-        if ($processAdditionalSyncModels && $this->logger) $this->logger->callUpdateOrCreateOnAdditionalSyncModel($rawData, $this->model);
-        foreach ($this->additionalSyncModels as $additionalSyncModel) {
-            if ($processAdditionalSyncModels) {
+        if ($this->processAdditionalSyncModels) {
+            if ($this->logger) $this->logger->callUpdateOrCreateOnAdditionalSyncModel($rawData, $this->model);
+            foreach ($this->additionalSyncModels as $additionalSyncModel) {
                 if ($this->logger) $this->logger->callUpdateOrCreateOnAdditionalSyncModel($rawData, $this->model, $additionalSyncModel);
                 $additionalSyncModel->updateOrCreate($rawData, $index, $item);
-            } else {
-                $additionalSyncModel->addSkippedParentItemId($this->model->getId($item, $parentItem));
             }
         }
         return $item;
     }
 
-    function addSkippedParentItemId($parentItemId)
-    {
-        return $this->skippedParentItemIds[] = $parentItemId;
-    }
-
     function commitTransaction($countItems)
     {
-        parent::commitTransaction($countItems);
-        $deletedItemsIds = $this->model->deleteOthers($this->seenItemIds, $this->skippedParentItemIds);
+        if ($this->processAdditionalSyncModels) {
+            if ($this->logger) $this->logger->callCommitTransactionOnAdditionalSyncModel($countItems, $this->model);
+            foreach ($this->additionalSyncModels as $additionalSyncModel) {
+                if ($this->logger) $this->logger->callCommitTransactionOnAdditionalSyncModel($countItems, $this->model, $additionalSyncModel);
+                $additionalSyncModel->commitTransaction($countItems);
+            }
+        }
+        // deletes relation items of lastParentItem
+        $deletedItemsIds = $this->model->deleteOthers($this->seenItemIds, $this->lastParentId);
         if ($this->logger) $this->logger->deletedItemIds($deletedItemsIds);
         if ($this->logger) $this->logger->summary();
     }

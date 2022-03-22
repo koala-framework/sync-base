@@ -6,17 +6,12 @@ use Kwf_Model_Select;
 
 class BasicModelKwfWrapper extends \Kwf\SyncBaseBundle\Services\Sync\SyncModel\BasicModelKwfWrapper implements ModelInterface
 {
-    function getParentId($item)
-    {
-        return $this->parentRelationFieldName ? $item->{$this->parentRelationFieldName} : null;
-    }
-
-    function deleteOthers($seenItemIds, $skippedParentItemIds = array())
+    function deleteOthers($seenItemIds, $parentItemId = null)
     {
         $select = new Kwf_Model_Select();
         if (count($seenItemIds)) $select->whereNotEquals('id', $seenItemIds);
-        if ($this->parentRelationFieldName && count($skippedParentItemIds)) {
-            $select->whereNotEquals($this->parentRelationFieldName, $skippedParentItemIds);
+        if ($parentItemId && $this->parentRelationFieldName) {
+            $select->whereEquals($this->parentRelationFieldName, $parentItemId);
         }
         $deletedIds = $this->model->getIds($select);
         $this->model->deleteRows($select);
