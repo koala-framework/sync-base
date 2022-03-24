@@ -6,7 +6,7 @@ use Kwf\SyncBaseBundle\Services\Sync\ProcessChangedInterface;
 use Kwf\SyncBaseBundle\Services\Sync\SyncModel\ProcessChanged\ModelInterface;
 use Kwf\SyncBaseBundle\Services\Sync\SyncModel\ProcessChanged\LoggerInterface;
 
-class ProcessChanged extends BasicSyncModel
+class ProcessChanged extends BasicSyncModel implements ProcessChangedInterface
 {
     /** @var ProcessChangedInterface[] $additionalSyncModels */
     protected $additionalSyncModels;
@@ -55,7 +55,7 @@ class ProcessChanged extends BasicSyncModel
             }
             $this->seenItemIds[] = $this->model->getId($item, $parentItem);
         } else {
-            if ($this->lastUpdateFieldName && strtotime($item->{$this->lastUpdateFieldName}) < strtotime($normalizedData[$this->lastUpdateFieldName])) {
+            if ($this->itemNeedsUpdate($item, $normalizedData)) {
                 $this->processAdditionalSyncModels = true;
                 $item = $this->model->updateItem($item, $normalizedData, $parentItem);
                 if ($this->logger) $this->logger->itemUpdated($item, $normalizedData, $this->model);
@@ -73,6 +73,11 @@ class ProcessChanged extends BasicSyncModel
             }
         }
         return $item;
+    }
+
+    function itemNeedsUpdate($item, $normalizedData)
+    {
+        return $this->lastUpdateFieldName && strtotime($item->{$this->lastUpdateFieldName}) < strtotime($normalizedData[$this->lastUpdateFieldName]);
     }
 
     function commitTransaction($countItems)
