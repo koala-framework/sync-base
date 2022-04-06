@@ -43,7 +43,9 @@ class BasicModelKwfWrapper extends \Kwf\SyncBaseBundle\Services\Sync\SyncModel\B
 
     function needsUpdate($item, $normalizedData)
     {
-        return $this->lastUpdateFieldName && strtotime($item->{$this->lastUpdateFieldName}) < strtotime($normalizedData[$this->lastUpdateFieldName]);
+        return $this->lastUpdateFieldName
+            ? strtotime($item->{$this->lastUpdateFieldName}) < strtotime($normalizedData[$this->lastUpdateFieldName])
+            : true; // always update items without lastUpdateFieldName
     }
 
 }
