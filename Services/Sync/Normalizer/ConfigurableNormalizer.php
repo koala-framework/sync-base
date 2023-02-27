@@ -22,7 +22,7 @@ class ConfigurableNormalizer implements NormalizerInterface
         return $this->applyNormalizationConfig(array(), $data, $index);
     }
 
-    protected function applyNormalizationConfig($normalizedCar, $carData, $index)
+    protected function applyNormalizationConfig($normalizedData, $data, $index)
     {
         foreach ($this->normalizationConfig->getConfig() as $dbField => $config) {
             if (is_array($config) && isset($config['class'])) {
@@ -32,20 +32,20 @@ class ConfigurableNormalizer implements NormalizerInterface
                     if (is_array($config['field'])) {
                         $upstreamValue = array();
                         foreach ($config['field'] as $field) {
-                            $upstreamValue[$field] = $this->getUpstreamValue(array($field), $carData);
+                            $upstreamValue[$field] = $this->getUpstreamValue(array($field), $data);
                         }
                     } else {
                         $mapping = is_array($config['field']) ? $config['field'] : array($config['field']);
-                        $upstreamValue = $this->getUpstreamValue($mapping, $carData);
+                        $upstreamValue = $this->getUpstreamValue($mapping, $data);
                     }
                 }
-                $normalizedCar[$dbField] = $normalizer->normalize($upstreamValue, $index);
+                $normalizedData[$dbField] = $normalizer->normalize($upstreamValue, $index);
                 continue;
             }
             $mapping = is_array($config) ? $config : array($config);
-            $normalizedCar[$dbField] = $this->getUpstreamValue($mapping, $carData);
+            $normalizedData[$dbField] = $this->getUpstreamValue($mapping, $data);
         }
-        return $normalizedCar;
+        return $normalizedData;
     }
 
     protected function getNormalizer($config)
@@ -56,33 +56,33 @@ class ConfigurableNormalizer implements NormalizerInterface
             : $ref->newInstance();
     }
 
-    protected function getUpstreamValue($mapping, $carData)
+    protected function getUpstreamValue($mapping, $data)
     {
         $value = null;
         foreach ($mapping as $index => $map) {
             $map = explode('.', $map);
-            $drilledCarData = $carData;
+            $drilledData = $data;
             foreach ($map as $mapKey) {
                 if (!$mapKey) {
-                    $value = $drilledCarData;
+                    $value = $drilledData;
                 }
                 if (is_array($mapKey)) {
                     foreach ($mapKey as $fieldName) {
-                        if (!isset($drilledCarData[$fieldName])) {
+                        if (!isset($drilledData[$fieldName])) {
                             continue;
                         }
-                        $value = $drilledCarData[$mapKey];
+                        $value = $drilledData[$mapKey];
                     }
                     break;
                 }
-                if (!isset($drilledCarData[$mapKey])) {
-                    continue;
-                }
-                if (!is_array($drilledCarData[$mapKey]) || (count($mapping) === 1 && $index + 1 === count($map))) {
-                    $value = $drilledCarData[$mapKey];
+                if (!isset($drilledData[$mapKey])) {
                     break;
                 }
-                $drilledCarData = $drilledCarData[$mapKey];
+                if (!is_array($drilledData[$mapKey]) || (count($mapping) === 1 && $index + 1 === count($map))) {
+                    $value = $drilledData[$mapKey];
+                    break;
+                }
+                $drilledData = $drilledData[$mapKey];
             }
             if (isset($value)) {
                 break;
