@@ -22,7 +22,11 @@ class ConcatValue implements NormalizerInterface
             foreach ($templateParts as $index => $templatePart) {
                 $templateString .= $templatePart . (isset($indexedValues[$index]) ? $indexedValues[$index] : '');
             }
-            return $templateString;
+            $stringHasValue = false;
+            foreach ($indexedValues as $value) {
+                if ($value) return $templateString;
+            }
+            return null;
         }
 
         return is_array($value) ? implode($this->_separator, $value) : $value;
